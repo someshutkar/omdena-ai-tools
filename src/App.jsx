@@ -480,16 +480,6 @@ export default function App() {
                 <div className="rp-sub">≈ {fmt(total*12)} per year</div>
                 <div className="rp-hint">🔓 Enter your details below to unlock the full breakdown showing exactly where these savings come from</div>
               </div>
-              <div className="locked">
-                <div className="locked-items">
-                  {roiResults.map((_,i)=><div className="locked-item" key={i}/>)}
-                </div>
-                <div className="locked-overlay">
-                  <div className="locked-icon">🔒</div>
-                  <div className="locked-text">Full savings breakdown locked</div>
-                  <div className="locked-sub">Enter your details to unlock</div>
-                </div>
-              </div>
               <EmailGate
                 title="Unlock your full ROI breakdown"
                 subtitle="See exactly where your savings come from, category by category. We'll also send a copy to your inbox."
@@ -575,16 +565,6 @@ export default function App() {
                 <div className="sp-headline">{tier.headline}</div>
                 <div className="sp-hint">🔓 Enter your details below to unlock your full action plan and personalised next steps</div>
               </div>
-              <div className="locked">
-                <div className="locked-items">
-                  <div className="locked-item"/><div className="locked-item"/><div className="locked-item"/>
-                </div>
-                <div className="locked-overlay">
-                  <div className="locked-icon">🔒</div>
-                  <div className="locked-text">Your personalised action plan is locked</div>
-                  <div className="locked-sub">Enter your details to unlock</div>
-                </div>
-              </div>
               <EmailGate
                 title="Unlock your full action plan"
                 subtitle="Get your personalised next steps based on your score. We'll also send a copy to your inbox."
@@ -660,16 +640,6 @@ export default function App() {
                 <div className="cp-range">{fmt(r.low)} – {fmt(r.high)}</div>
                 <div className="cp-sub">Timeline: {r.wLow}–{r.wHigh} weeks</div>
                 <div className="cp-hint">🔓 Enter your details below to unlock the full scope breakdown and what's included</div>
-              </div>
-              <div className="locked">
-                <div className="locked-items">
-                  <div className="locked-item"/><div className="locked-item"/><div className="locked-item"/><div className="locked-item"/>
-                </div>
-                <div className="locked-overlay">
-                  <div className="locked-icon">🔒</div>
-                  <div className="locked-text">Full scope breakdown is locked</div>
-                  <div className="locked-sub">Enter your details to unlock</div>
-                </div>
               </div>
               <EmailGate
                 title="Unlock your full project breakdown"
