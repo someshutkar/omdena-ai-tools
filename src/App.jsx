@@ -397,7 +397,7 @@ export default function App() {
   };
 
   const vConfig = vertical ? VERTICALS.find(v=>v.id===vertical) : null;
-  const selectTool = (t) => { setTool(t); if(t==="roi") setScreen("roi-vertical"); else if(t==="assess") setScreen("assess-vertical"); else setScreen("cost-q"); };
+  const selectTool = (t) => { setTool(t); if(t==="roi") setScreen("roi-vertical"); else if(t==="assess") setScreen("assess-vertical"); else setScreen("cost-vertical"); };
   const calcROI = () => { setRoiResults(ROI_CONFIG[vertical].calculate(roiInputs)); setScreen("roi-preview"); };
   const answerQ = (qId, s) => {
     const na = {...answers,[qId]:s};
@@ -674,11 +674,26 @@ export default function App() {
             </>;
           })()}
 
+          {/* ── COST VERTICAL ── */}
+          {screen==="cost-vertical"&&<>
+            <div className="back" onClick={reset}>← Back</div>
+            <div className="chip">Project Cost Calculator · Select Industry</div>
+            <h1 style={{fontSize:26}}>What's your <em>industry?</em></h1>
+            <p className="sub" style={{marginBottom:20}}>We'll tailor the cost estimate to your sector.</p>
+            <div className="vgrid">
+              {VERTICALS.map(v=>(
+                <div key={v.id} className={`vbtn${vertical===v.id?" sel":""}`} style={{"--vc":v.color}} onClick={()=>{setVertical(v.id);setScreen("cost-q");}}>
+                  <span className="vi">{v.icon}</span><span className="vl">{v.label}</span>
+                </div>
+              ))}
+            </div>
+          </>}
+
           {/* ── COST QUESTIONS ── */}
           {screen==="cost-q"&&(()=>{
             const step=COST_STEPS[costStep];
             return <>
-              <div className="back" onClick={()=>costStep===0?reset():setCostStep(costStep-1)}>← Back</div>
+              <div className="back" onClick={()=>costStep===0?setScreen("cost-vertical"):setCostStep(costStep-1)}>← Back</div>
               <div className="qbar">
                 <span className="chip" style={{margin:0,whiteSpace:"nowrap"}}>Step {costStep+1}/{COST_STEPS.length}</span>
                 <div className="qprog"><div className="qfill" style={{width:`${((costStep+1)/COST_STEPS.length)*100}%`}} /></div>
