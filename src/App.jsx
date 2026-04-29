@@ -427,7 +427,7 @@ export default function App() {
         formData.append("q3_name[first]", lead.name.split(" ")[0]);
         formData.append("q3_name[last]", lead.name.split(" ").slice(1).join(" ") || ".");
         formData.append("q4_companyName", lead.company);
-        formData.append("q5_email", lead.email);
+        formData.append("q6_email", lead.email);
         formData.append("q7_toolUsed", toolUsed);
         formData.append("q8_typeA8", result || "");
         formData.append("q9_typeA9", vertical || "");
@@ -436,7 +436,7 @@ export default function App() {
         formData.append("q3_name[first]", lead.name.split(" ")[0]);
         formData.append("q3_name[last]", lead.name.split(" ").slice(1).join(" ") || ".");
         formData.append("q4_companyName", lead.company);
-        formData.append("q5_email", lead.email);
+        formData.append("q6_email", lead.email);
         formData.append("q7_toolUsed", toolUsed);
         formData.append("q8_typeA8", result || "");
         formData.append("q9_typeA9", vertical || "");
@@ -570,7 +570,7 @@ export default function App() {
               <div className="cta-box">
                 <h3>Want to capture this ROI?</h3>
                 <p>Omdena has delivered AI projects across {vConfig?.label.toLowerCase()} and 10+ other sectors. Let's see what's possible for you.</p>
-                <button className="cbtn">Book a Free Consultation →</button>
+                <button className="cbtn" onClick={()=>window.open("https://www.omdena.com/contact-us","_blank")}>Book a Free Consultation →</button>
               </div>
               <button className="btn-out" onClick={reset}>← Start over</button>
             </>;
@@ -660,7 +660,7 @@ export default function App() {
               <div className="cta-box">
                 <h3>Ready to take the next step?</h3>
                 <p>Omdena works with SMEs at every readiness stage — from data foundation to full AI deployment.</p>
-                <button className="cbtn">Talk to an Omdena Expert →</button>
+                <button className="cbtn" onClick={()=>window.open("https://www.omdena.com/contact-us","_blank")}>Talk to an Omdena Expert →</button>
               </div>
               <button className="btn-out" onClick={reset}>← Start over</button>
             </>;
@@ -750,7 +750,7 @@ export default function App() {
               <div className="cta-box">
                 <h3>Want a formal proposal?</h3>
                 <p>Our team can turn this estimate into a detailed scope of work within 48 hours — at no cost to you.</p>
-                <button className="cbtn">Request a Free Proposal →</button>
+                <button className="cbtn" onClick={()=>window.open("https://www.omdena.com/contact-us","_blank")}>Request a Free Proposal →</button>
               </div>
               <button className="btn-out" onClick={reset}>← Start over</button>
             </>;
