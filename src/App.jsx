@@ -410,36 +410,40 @@ export default function App() {
     if(!lead.email.includes("@")||!lead.name) return;
     try {
       const formData = new FormData();
+      const nameParts = lead.name.trim().split(" ");
+      const firstName = nameParts[0];
+      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : firstName;
+      const verticalCapitalized = vertical ? vertical.charAt(0).toUpperCase() + vertical.slice(1) : "";
 
       // Route to correct JotForm based on tool
       let formId = "";
       if(toolUsed === "ROI Calculator") {
         formId = "261181254868059";
-        formData.append("q3_name[first]", lead.name.split(" ")[0]);
-        formData.append("q3_name[last]", lead.name.split(" ").slice(1).join(" ") || ".");
+        formData.append("q3_name[first]", firstName);
+        formData.append("q3_name[last]", lastName);
         formData.append("q4_companyName", lead.company);
         formData.append("q5_email", lead.email);
         formData.append("q6_toolsUsed", toolUsed);
         formData.append("q7_typeA7", result || "");
-        formData.append("q8_typeA8", vertical || "");
+        formData.append("q8_typeA8", verticalCapitalized);
       } else if(toolUsed === "AI Readiness Assessment") {
         formId = "261180607481051";
-        formData.append("q3_name[first]", lead.name.split(" ")[0]);
-        formData.append("q3_name[last]", lead.name.split(" ").slice(1).join(" ") || ".");
+        formData.append("q3_name[first]", firstName);
+        formData.append("q3_name[last]", lastName);
         formData.append("q4_companyName", lead.company);
         formData.append("q6_email", lead.email);
         formData.append("q7_toolUsed", toolUsed);
         formData.append("q8_typeA8", result || "");
-        formData.append("q9_typeA9", vertical || "");
+        formData.append("q9_typeA9", verticalCapitalized);
       } else if(toolUsed === "Project Cost Calculator") {
         formId = "261180767653059";
-        formData.append("q3_name[first]", lead.name.split(" ")[0]);
-        formData.append("q3_name[last]", lead.name.split(" ").slice(1).join(" ") || ".");
+        formData.append("q3_name[first]", firstName);
+        formData.append("q3_name[last]", lastName);
         formData.append("q4_companyName", lead.company);
         formData.append("q6_email", lead.email);
         formData.append("q7_toolUsed", toolUsed);
         formData.append("q8_typeA8", result || "");
-        formData.append("q9_typeA9", vertical || "");
+        formData.append("q9_typeA9", verticalCapitalized);
       }
 
       if(formId) {
