@@ -385,7 +385,29 @@ export default function App() {
     if(currentQ < ASSESSMENT_QUESTIONS.length-1) setCurrentQ(currentQ+1);
     else { setScore(Object.values(na).reduce((a,b)=>a+b,0)); setScreen("assess-preview"); }
   };
-  const submitGate = (next) => { if(!lead.email.includes("@")||!lead.name) return; setScreen(next); };
+
+  const JOTFORM_ID = "261178454458062";
+
+  const submitGate = async (next, toolUsed, result) => {
+    if(!lead.email.includes("@")||!lead.name) return;
+    try {
+      const formData = new FormData();
+      formData.append("q3_name[first]", lead.name.split(" ")[0]);
+      formData.append("q3_name[last]", lead.name.split(" ").slice(1).join(" ") || ".");
+      formData.append("q4_companyName", lead.company);
+      formData.append("q5_email", lead.email);
+      formData.append("q6_toolUsed", toolUsed || tool || "");
+      formData.append("q7_result", result || "");
+      formData.append("q8_vertical", vertical || "");
+      await fetch(`https://submit.jotform.com/submit/${JOTFORM_ID}/`, {
+        method: "POST",
+        mode: "no-cors",
+        body: formData,
+      });
+    } catch(e) { console.log("JotForm submit:", e); }
+    setScreen(next);
+  };
+
   const selectCostOpt = (key, val) => {
     const next = {...costState,[key]:val};
     setCostState(next);
@@ -393,7 +415,7 @@ export default function App() {
     else setScreen("cost-preview");
   };
 
-  const EmailGate = ({title, subtitle, btnText, next}) => (
+  const EmailGate = ({title, subtitle, btnText, next, toolUsed, result}) => (
     <div className="egate">
       <h3>{title}</h3>
       <p>{subtitle}</p>
@@ -402,7 +424,7 @@ export default function App() {
         <input className="finput" placeholder="Company name" value={lead.company} onChange={e=>setLead({...lead,company:e.target.value})} />
       </div>
       <input className="finput" style={{marginBottom:14}} placeholder="Work email address" value={lead.email} onChange={e=>setLead({...lead,email:e.target.value})} />
-      <button className="btn" onClick={()=>submitGate(next)} disabled={!lead.name||!lead.email.includes("@")}>{btnText}</button>
+      <button className="btn" onClick={()=>submitGate(next, toolUsed, result)} disabled={!lead.name||!lead.email.includes("@")}>{btnText}</button>
       <div className="privacy">🔒 Your data is private and never shared</div>
     </div>
   );
@@ -485,6 +507,8 @@ export default function App() {
                 subtitle="See exactly where your savings come from, category by category. We'll also send a copy to your inbox."
                 btnText="Unlock My Full Breakdown →"
                 next="roi-results"
+                toolUsed="ROI Calculator"
+                result={`Monthly savings: ${fmt(total)} | Annual: ${fmt(total*12)}`}
               />
             </>;
           })()}
@@ -570,6 +594,8 @@ export default function App() {
                 subtitle="Get your personalised next steps based on your score. We'll also send a copy to your inbox."
                 btnText="Unlock My Action Plan →"
                 next="assess-results"
+                toolUsed="AI Readiness Assessment"
+                result={`Score: ${score}/80 | Tier: ${tier.label}`}
               />
             </>;
           })()}
@@ -646,6 +672,8 @@ export default function App() {
                 subtitle="See exactly what's included in your estimate. An Omdena specialist can turn this into a formal proposal within 48 hours."
                 btnText="Unlock My Full Breakdown →"
                 next="cost-results"
+                toolUsed="Project Cost Calculator"
+                result={`Estimate: ${fmt(r.low)} – ${fmt(r.high)} | Timeline: ${r.wLow}–${r.wHigh} weeks`}
               />
             </>;
           })()}
