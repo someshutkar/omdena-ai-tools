@@ -412,7 +412,7 @@ export default function App() {
       const formData = new FormData();
       const nameParts = lead.name.trim().split(" ");
       const firstName = nameParts[0];
-      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : firstName;
+      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
       const verticalCapitalized = vertical ? vertical.charAt(0).toUpperCase() + vertical.slice(1) : "";
 
       // Route to correct JotForm based on tool
