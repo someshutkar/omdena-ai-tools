@@ -413,6 +413,7 @@ export default function App() {
       const nameParts = lead.name.trim().split(" ");
       const firstName = nameParts[0];
       const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+      const fullName = lead.name.trim();
       const verticalCapitalized = vertical ? vertical.charAt(0).toUpperCase() + vertical.slice(1) : "";
 
       // Route to correct JotForm based on tool
@@ -426,6 +427,7 @@ export default function App() {
         formData.append("q6_toolsUsed", toolUsed);
         formData.append("q7_typeA7", result || "");
         formData.append("q8_typeA8", verticalCapitalized);
+        formData.append("q9_displayName", fullName);
       } else if(toolUsed === "AI Readiness Assessment") {
         formId = "261180607481051";
         formData.append("q3_name[first]", firstName);
@@ -435,6 +437,7 @@ export default function App() {
         formData.append("q7_toolUsed", toolUsed);
         formData.append("q8_typeA8", result || "");
         formData.append("q9_typeA9", verticalCapitalized);
+        formData.append("q11_displayName", fullName);
       } else if(toolUsed === "Project Cost Calculator") {
         formId = "261180767653059";
         formData.append("q3_name[first]", firstName);
@@ -444,6 +447,7 @@ export default function App() {
         formData.append("q7_toolUsed", toolUsed);
         formData.append("q8_typeA8", result || "");
         formData.append("q9_typeA9", verticalCapitalized);
+        formData.append("q10_displayName", fullName);
       }
 
       if(formId) {
