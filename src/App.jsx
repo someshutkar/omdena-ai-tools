@@ -414,9 +414,9 @@ export default function App() {
       formData.append("q3_name[last]", lead.name.split(" ").slice(1).join(" ") || ".");
       formData.append("q4_companyName", lead.company);
       formData.append("q5_email", lead.email);
-      formData.append("q6_toolUsed", toolUsed || tool || "");
-      formData.append("q7_result", result || "");
-      formData.append("q8_vertical", vertical || "");
+      formData.append("q9_typeA", toolUsed || tool || "");
+      formData.append("q10_result", result || "");
+      formData.append("q11_vertical", vertical || "");
       await fetch(`https://submit.jotform.com/submit/${JOTFORM_ID}/`, {
         method: "POST",
         mode: "no-cors",
