@@ -410,18 +410,45 @@ export default function App() {
     if(!lead.email.includes("@")||!lead.name) return;
     try {
       const formData = new FormData();
-      formData.append("q3_name[first]", lead.name.split(" ")[0]);
-      formData.append("q3_name[last]", lead.name.split(" ").slice(1).join(" ") || ".");
-      formData.append("q4_companyName", lead.company);
-      formData.append("q5_email", lead.email);
-      formData.append("q9_typeA", toolUsed || tool || "");
-      formData.append("q10_result", result || "");
-      formData.append("q11_vertical", vertical || "");
-      await fetch(`https://submit.jotform.com/submit/${JOTFORM_ID}/`, {
-        method: "POST",
-        mode: "no-cors",
-        body: formData,
-      });
+
+      // Route to correct JotForm based on tool
+      let formId = "";
+      if(toolUsed === "ROI Calculator") {
+        formId = "261181254868059";
+        formData.append("q3_name[first]", lead.name.split(" ")[0]);
+        formData.append("q3_name[last]", lead.name.split(" ").slice(1).join(" ") || ".");
+        formData.append("q4_companyName", lead.company);
+        formData.append("q5_email", lead.email);
+        formData.append("q6_toolsUsed", toolUsed);
+        formData.append("q7_typeA7", result || "");
+        formData.append("q8_typeA8", vertical || "");
+      } else if(toolUsed === "AI Readiness Assessment") {
+        formId = "261180607481051";
+        formData.append("q3_name[first]", lead.name.split(" ")[0]);
+        formData.append("q3_name[last]", lead.name.split(" ").slice(1).join(" ") || ".");
+        formData.append("q4_companyName", lead.company);
+        formData.append("q5_email", lead.email);
+        formData.append("q7_toolUsed", toolUsed);
+        formData.append("q8_typeA8", result || "");
+        formData.append("q9_typeA9", vertical || "");
+      } else if(toolUsed === "Project Cost Calculator") {
+        formId = "261180767653059";
+        formData.append("q3_name[first]", lead.name.split(" ")[0]);
+        formData.append("q3_name[last]", lead.name.split(" ").slice(1).join(" ") || ".");
+        formData.append("q4_companyName", lead.company);
+        formData.append("q5_email", lead.email);
+        formData.append("q7_toolUsed", toolUsed);
+        formData.append("q8_typeA8", result || "");
+        formData.append("q9_typeA9", vertical || "");
+      }
+
+      if(formId) {
+        await fetch(`https://submit.jotform.com/submit/${formId}/`, {
+          method: "POST",
+          mode: "no-cors",
+          body: formData,
+        });
+      }
     } catch(e) { console.log("JotForm submit:", e); }
     setScreen(next);
   };
