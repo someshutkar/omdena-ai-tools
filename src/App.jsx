@@ -353,6 +353,26 @@ function calcCost(cs) {
   return { low, high, wLow, wHigh, pt };
 }
 
+// ─── EMAIL GATE COMPONENT ────────────────────────────────────────────────────
+
+const JOTFORM_ID = "261178454458062";
+
+function EmailGate({title, subtitle, btnText, next, toolUsed, result, vertical, lead, setLead, onSubmit}) {
+  return (
+    <div className="egate">
+      <h3>{title}</h3>
+      <p>{subtitle}</p>
+      <div className="frow">
+        <input className="finput" placeholder="Full name" value={lead.name} onChange={e=>setLead({...lead,name:e.target.value})} />
+        <input className="finput" placeholder="Company name" value={lead.company} onChange={e=>setLead({...lead,company:e.target.value})} />
+      </div>
+      <input className="finput" style={{marginBottom:14}} placeholder="Work email address" value={lead.email} onChange={e=>setLead({...lead,email:e.target.value})} />
+      <button className="btn" onClick={()=>onSubmit(next, toolUsed, result)} disabled={!lead.name||!lead.email.includes("@")}>{btnText}</button>
+      <div className="privacy">🔒 Your data is private and never shared</div>
+    </div>
+  );
+}
+
 // ─── APP ─────────────────────────────────────────────────────────────────────
 
 export default function App() {
@@ -386,8 +406,6 @@ export default function App() {
     else { setScore(Object.values(na).reduce((a,b)=>a+b,0)); setScreen("assess-preview"); }
   };
 
-  const JOTFORM_ID = "261178454458062";
-
   const submitGate = async (next, toolUsed, result) => {
     if(!lead.email.includes("@")||!lead.name) return;
     try {
@@ -414,20 +432,6 @@ export default function App() {
     if(costStep < COST_STEPS.length-1) setCostStep(costStep+1);
     else setScreen("cost-preview");
   };
-
-  const EmailGate = ({title, subtitle, btnText, next, toolUsed, result}) => (
-    <div className="egate">
-      <h3>{title}</h3>
-      <p>{subtitle}</p>
-      <div className="frow">
-        <input className="finput" placeholder="Full name" value={lead.name} onChange={e=>setLead({...lead,name:e.target.value})} />
-        <input className="finput" placeholder="Company name" value={lead.company} onChange={e=>setLead({...lead,company:e.target.value})} />
-      </div>
-      <input className="finput" style={{marginBottom:14}} placeholder="Work email address" value={lead.email} onChange={e=>setLead({...lead,email:e.target.value})} />
-      <button className="btn" onClick={()=>submitGate(next, toolUsed, result)} disabled={!lead.name||!lead.email.includes("@")}>{btnText}</button>
-      <div className="privacy">🔒 Your data is private and never shared</div>
-    </div>
-  );
 
   return (
     <>
@@ -509,6 +513,10 @@ export default function App() {
                 next="roi-results"
                 toolUsed="ROI Calculator"
                 result={`Monthly savings: ${fmt(total)} | Annual: ${fmt(total*12)}`}
+                vertical={vertical}
+                lead={lead}
+                setLead={setLead}
+                onSubmit={submitGate}
               />
             </>;
           })()}
@@ -596,6 +604,10 @@ export default function App() {
                 next="assess-results"
                 toolUsed="AI Readiness Assessment"
                 result={`Score: ${score}/80 | Tier: ${tier.label}`}
+                vertical={vertical}
+                lead={lead}
+                setLead={setLead}
+                onSubmit={submitGate}
               />
             </>;
           })()}
@@ -674,6 +686,10 @@ export default function App() {
                 next="cost-results"
                 toolUsed="Project Cost Calculator"
                 result={`Estimate: ${fmt(r.low)} – ${fmt(r.high)} | Timeline: ${r.wLow}–${r.wHigh} weeks`}
+                vertical={vertical}
+                lead={lead}
+                setLead={setLead}
+                onSubmit={submitGate}
               />
             </>;
           })()}
