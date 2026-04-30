@@ -198,7 +198,7 @@ const css = `
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:#f0ede6;}
   .wrap{font-family:'Outfit',sans-serif;background:#f0ede6;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:28px 16px 60px;}
-  .card{background:#fff;border-radius:24px;padding:40px;width:100%;max-width:700px;box-shadow:0 2px 32px rgba(0,0,0,0.07);animation:up .35s ease forwards;}
+  .card{background:#fff;border-radius:24px;padding:40px;width:100%;max-width:700px;box-shadow:0 4px 40px rgba(0,0,0,0.10);animation:up .35s ease forwards;border:2px solid #bfdbfe;}
   @media(max-width:600px){
     .wrap{padding:12px 8px 40px;}
     .card{padding:24px 18px;border-radius:16px;}
@@ -218,7 +218,8 @@ const css = `
   .brand-pill{background:#111;color:#f0ede6;border-radius:4px;padding:2px 8px;font-size:9px;letter-spacing:2px;}
   h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:32px;font-weight:800;line-height:1.15;color:#111;margin-bottom:10px;}
   h1 em{font-style:normal;color:#1d4ed8;}
-  .sub{font-size:15px;color:#6b7280;line-height:1.65;margin-bottom:30px;}
+  .sub{font-size:16px;color:#4b5563;line-height:1.65;margin-bottom:12px;}
+  .interactive-hint{font-size:13px;color:#1d4ed8;font-weight:600;margin-bottom:22px;display:flex;align-items:center;gap:6px;}
   .tool-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
   .tool-card{border:2px solid #e5e7eb;border-radius:16px;padding:22px 16px;cursor:pointer;transition:all .2s;background:#fafafa;display:flex;flex-direction:column;gap:7px;}
   .tool-card:hover{border-color:#111;background:#fff;transform:translateY(-2px);}
@@ -226,6 +227,7 @@ const css = `
   .tc-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;color:#111;}
   .tc-desc{font-size:12px;color:#9ca3af;line-height:1.5;}
   .tc-tag{margin-top:4px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:4px;display:inline-block;align-self:flex-start;}
+  .tc-cta{margin-top:8px;font-size:13px;font-weight:700;color:#1d4ed8;}
   .chip{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#9ca3af;margin-bottom:14px;}
   .back{display:inline-flex;align-items:center;gap:5px;font-size:13px;color:#9ca3af;cursor:pointer;margin-bottom:26px;transition:color .2s;}
   .back:hover{color:#111;}
@@ -495,19 +497,20 @@ export default function App() {
 
           {/* HOME */}
           {screen==="home"&&<>
-            <h1>Three free tools to unlock your <em>AI potential</em></h1>
-            <p className="sub">Built for SMEs across every sector. Find your savings, check your readiness, or estimate your project cost — in minutes.</p>
+            <h1>Find out how much AI could <em>save your business</em></h1>
+            <p className="sub">Calculate your savings, check your AI readiness, or estimate your project cost — in under 2 minutes.</p>
+            <div className="interactive-hint">👇 Click a tool below to get started</div>
             <div className="tool-grid">
               {[
-                {t:"roi",icon:"💰",name:"ROI Calculator",desc:"See how much AI could save your business in real dollars.",tag:"Top of funnel",tagStyle:{background:"#eff6ff",color:"#1d4ed8"}},
-                {t:"assess",icon:"🎯",name:"AI Readiness",desc:"Get a personalized score and action plan for your AI journey.",tag:"Mid funnel",tagStyle:{background:"#f0fdf4",color:"#16a34a"}},
-                {t:"cost",icon:"🧮",name:"Project Cost Calculator",desc:"Estimate what an AI project with Omdena would actually cost.",tag:"Bottom funnel",tagStyle:{background:"#fef3c7",color:"#92400e"}},
-              ].map(({t,icon,name,desc,tag,tagStyle})=>(
+                {t:"roi",icon:"💰",name:"ROI Calculator",desc:"See how much AI could save your business in real dollars.",cta:"Calculate my savings →"},
+                {t:"assess",icon:"🎯",name:"AI Readiness Assessment",desc:"Get a personalized score and action plan for your AI journey.",cta:"Check my readiness →"},
+                {t:"cost",icon:"🧮",name:"Project Cost Calculator",desc:"Estimate what an AI project with Omdena would actually cost.",cta:"Estimate my project cost →"},
+              ].map(({t,icon,name,desc,cta})=>(
                 <div key={t} className="tool-card" onClick={()=>selectTool(t)}>
                   <div className="tc-icon">{icon}</div>
                   <div className="tc-name">{name}</div>
                   <div className="tc-desc">{desc}</div>
-                  <div className="tc-tag" style={tagStyle}>{tag}</div>
+                  <div className="tc-cta">{cta}</div>
                 </div>
               ))}
             </div>
