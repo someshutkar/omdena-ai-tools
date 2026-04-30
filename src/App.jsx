@@ -199,6 +199,20 @@ const css = `
   body{background:#f0ede6;}
   .wrap{font-family:'Outfit',sans-serif;background:#f0ede6;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:28px 16px 60px;}
   .card{background:#fff;border-radius:24px;padding:40px;width:100%;max-width:700px;box-shadow:0 2px 32px rgba(0,0,0,0.07);animation:up .35s ease forwards;}
+  @media(max-width:600px){
+    .wrap{padding:12px 8px 40px;}
+    .card{padding:24px 18px;border-radius:16px;}
+    h1{font-size:24px !important;}
+    .tool-grid{grid-template-columns:1fr !important;}
+    .vgrid{grid-template-columns:repeat(2,1fr) !important;}
+    .frow{grid-template-columns:1fr !important;}
+    .cost-bd{grid-template-columns:1fr !important;}
+    .roi-preview .rp-value{font-size:36px !important;}
+    .scircle{width:100px !important;height:100px !important;}
+    .snum{font-size:30px !important;}
+    .ch-range{font-size:28px !important;}
+    .qtext{font-size:17px !important;}
+  }
   @keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
   .brand{font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#111;margin-bottom:36px;display:flex;align-items:center;gap:8px;}
   .brand-pill{background:#111;color:#f0ede6;border-radius:4px;padding:2px 8px;font-size:9px;letter-spacing:2px;}
