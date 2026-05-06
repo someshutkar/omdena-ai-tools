@@ -369,6 +369,14 @@ function calcCost(cs) {
   return { low, high, wLow, wHigh, pt };
 }
 
+const GA_ID = "G-TEV21NE260";
+
+function trackEvent(eventName, params = {}) {
+  if(typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", eventName, params);
+  }
+}
+
 // ─── EMAIL GATE COMPONENT ────────────────────────────────────────────────────
 
 const JOTFORM_ID = "261178454458062";
@@ -413,13 +421,28 @@ export default function App() {
   };
 
   const vConfig = vertical ? VERTICALS.find(v=>v.id===vertical) : null;
-  const selectTool = (t) => { setTool(t); if(t==="roi") setScreen("roi-vertical"); else if(t==="assess") setScreen("assess-vertical"); else setScreen("cost-vertical"); };
-  const calcROI = () => { setRoiResults(ROI_CONFIG[vertical].calculate(roiInputs)); setScreen("roi-preview"); };
+  const selectTool = (t) => {
+    trackEvent("tool_selected", { tool: t });
+    setTool(t);
+    if(t==="roi") setScreen("roi-vertical");
+    else if(t==="assess") setScreen("assess-vertical");
+    else setScreen("cost-vertical");
+  };
+  const calcROI = () => {
+    trackEvent("roi_calculated", { vertical });
+    setRoiResults(ROI_CONFIG[vertical].calculate(roiInputs));
+    setScreen("roi-preview");
+  };
   const answerQ = (qId, s) => {
     const na = {...answers,[qId]:s};
     setAnswers(na);
     if(currentQ < ASSESSMENT_QUESTIONS.length-1) setCurrentQ(currentQ+1);
-    else { setScore(Object.values(na).reduce((a,b)=>a+b,0)); setScreen("assess-preview"); }
+    else {
+      const total = Object.values(na).reduce((a,b)=>a+b,0);
+      trackEvent("assessment_completed", { vertical, score: total });
+      setScore(total);
+      setScreen("assess-preview");
+    }
   };
 
   const submitGate = async (next, toolUsed, result) => {
@@ -478,6 +501,7 @@ export default function App() {
         });
       }
     } catch(e) { console.log("JotForm submit:", e); }
+    trackEvent("email_gate_submitted", { tool: toolUsed, vertical });
     setScreen(next);
   };
 
@@ -485,11 +509,21 @@ export default function App() {
     const next = {...costState,[key]:val};
     setCostState(next);
     if(costStep < COST_STEPS.length-1) setCostStep(costStep+1);
-    else setScreen("cost-preview");
+    else {
+      trackEvent("cost_calculator_completed", { vertical });
+      setScreen("cost-preview");
+    }
   };
 
   return (
     <>
+      <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
+      <script dangerouslySetInnerHTML={{__html:`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '${GA_ID}');
+      `}}/>
       <style>{css}</style>
       <div className="wrap">
         <div className="card">
@@ -498,7 +532,7 @@ export default function App() {
           {/* HOME */}
           {screen==="home"&&<>
             <h1>Find out how much AI could <em>save your business</em></h1>
-            <p className="sub">Calculate your savings, check your AI readiness, or estimate your project cost — in under 2 minutes.</p>
+            <p className="sub">Calculate your savings, check your AI readiness, or estimate your project cost in under 2 minutes.</p>
             <div className="interactive-hint">👇 Click a tool below to get started</div>
             <div className="tool-grid">
               {[
