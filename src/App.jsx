@@ -517,13 +517,6 @@ export default function App() {
 
   return (
     <>
-      <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
-      <script dangerouslySetInnerHTML={{__html:`
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', '${GA_ID}');
-      `}}/>
       <style>{css}</style>
       <div className="wrap">
         <div className="card">
