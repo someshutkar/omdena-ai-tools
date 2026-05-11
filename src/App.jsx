@@ -372,8 +372,17 @@ function calcCost(cs) {
 const GA_ID = "G-TEV21NE260";
 
 function trackEvent(eventName, params = {}) {
-  if(typeof window !== "undefined" && window.gtag) {
-    window.gtag("event", eventName, params);
+  try {
+    if(typeof window !== "undefined") {
+      window.dataLayer = window.dataLayer || [];
+      if(typeof window.gtag === "function") {
+        window.gtag("event", eventName, params);
+      } else {
+        window.dataLayer.push({ event: eventName, ...params });
+      }
+    }
+  } catch(e) {
+    console.log("GA4 event error:", e);
   }
 }
 
