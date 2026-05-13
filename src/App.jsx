@@ -280,8 +280,8 @@ const css = `
   .locked-sub{font-size:12px;color:#9ca3af;}
   .locked-items{display:flex;flex-direction:column;gap:8px;filter:blur(4px);}
   .locked-item{background:#f3f4f6;border-radius:8px;padding:12px 16px;height:48px;}
-  .blur-preview{filter:blur(7px);user-select:none;pointer-events:none;opacity:0.6;}
-  .preview-wrap{position:relative;border:2px solid #e5e7eb;border-radius:16px;padding:24px;margin-bottom:20px;background:#fafafa;overflow:hidden;text-align:center;}
+  .blur-preview{filter:blur(10px);user-select:none;pointer-events:none;opacity:0.55;}
+  .preview-wrap{position:relative;border:2px solid #e5e7eb;border-radius:16px;padding:24px;margin-bottom:16px;background:#fafafa;overflow:hidden;text-align:center;}
   .preview-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:rgba(255,255,255,0.55);}
   .preview-lock{font-size:26px;}
   .preview-lock-text{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#374151;}
