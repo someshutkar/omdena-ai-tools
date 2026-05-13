@@ -280,6 +280,12 @@ const css = `
   .locked-sub{font-size:12px;color:#9ca3af;}
   .locked-items{display:flex;flex-direction:column;gap:8px;filter:blur(4px);}
   .locked-item{background:#f3f4f6;border-radius:8px;padding:12px 16px;height:48px;}
+  .blur-preview{filter:blur(7px);user-select:none;pointer-events:none;opacity:0.6;}
+  .preview-wrap{position:relative;border:2px solid #e5e7eb;border-radius:16px;padding:24px;margin-bottom:20px;background:#fafafa;overflow:hidden;text-align:center;}
+  .preview-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:rgba(255,255,255,0.55);}
+  .preview-lock{font-size:26px;}
+  .preview-lock-text{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#374151;}
+  .preview-lock-sub{font-size:12px;color:#9ca3af;}
 
   /* Cost preview */
   .cost-preview{background:linear-gradient(135deg,#1e3a5f,#1d4ed8);border-radius:16px;padding:28px;text-align:center;margin-bottom:20px;color:#fff;}
@@ -600,11 +606,30 @@ export default function App() {
             const total=roiResults.reduce((a,r)=>a+r.monthly,0);
             return <>
               <div className="back" onClick={()=>setScreen("roi-inputs")}>← Back</div>
-              <div className="chip">{vConfig?.icon} {vConfig?.label} · Almost There</div>
+              <div className="chip">{vConfig?.icon} {vConfig?.label} · Your Results Are Ready</div>
               <h1 style={{fontSize:26,marginBottom:20}}>Your savings report is <em>ready</em></h1>
+              <div className="preview-wrap">
+                <div className="blur-preview">
+                  <div style={{fontFamily:"'Plus Jakarta Sans',sans-serif",fontSize:42,fontWeight:800,color:"#1d4ed8",marginBottom:4}}>{fmt(total)}</div>
+                  <div style={{fontSize:13,color:"#6b7280",marginBottom:12}}>estimated monthly savings</div>
+                  <div style={{display:"grid",gap:8}}>
+                    {roiResults.map((r,i)=>(
+                      <div key={i} style={{display:"flex",justifyContent:"space-between",background:"#f3f4f6",borderRadius:8,padding:"10px 14px"}}>
+                        <span style={{fontSize:13,color:"#374151"}}>{r.label}</span>
+                        <span style={{fontSize:13,fontWeight:700,color:"#1d4ed8"}}>{fmt(r.monthly)}/mo</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="preview-overlay">
+                  <div className="preview-lock">🔒</div>
+                  <div className="preview-lock-text">Enter your details to unlock</div>
+                  <div className="preview-lock-sub">Free — takes 10 seconds</div>
+                </div>
+              </div>
               <EmailGate
-                title="Get your free AI savings report"
-                subtitle="Enter your details to see exactly how much AI could save your business, broken down by category."
+                title="Unlock your free AI savings report"
+                subtitle="See your full savings breakdown by category. We'll also send a copy to your inbox."
                 btnText="Show My Savings Report →"
                 next="roi-results"
                 toolUsed="ROI Calculator"
@@ -682,11 +707,27 @@ export default function App() {
             const tier=getTier(score);
             return <>
               <div className="back" onClick={()=>{setCurrentQ(ASSESSMENT_QUESTIONS.length-1);setScreen("assess-questions");}}>← Back</div>
-              <div className="chip">{vConfig?.icon} {vConfig?.label} · Almost There</div>
+              <div className="chip">{vConfig?.icon} {vConfig?.label} · Your Score Is Ready</div>
               <h1 style={{fontSize:26,marginBottom:20}}>Your readiness report is <em>ready</em></h1>
+              <div className="preview-wrap">
+                <div className="blur-preview">
+                  <div className="scircle" style={{borderColor:tier.color,margin:"0 auto 14px"}}>
+                    <span className="snum" style={{color:tier.color}}>{score}</span>
+                    <span className="sdenom">out of 80</span>
+                  </div>
+                  <div className="sbadge" style={{borderColor:tier.color+"55",color:tier.color,background:tier.color+"11",margin:"0 auto 10px",display:"inline-flex"}}>{tier.emoji} {tier.label}</div>
+                  <div style={{fontFamily:"'Plus Jakarta Sans',sans-serif",fontSize:17,fontWeight:700,color:"#111",marginBottom:8}}>{tier.headline}</div>
+                  <div style={{fontSize:13,color:"#6b7280"}}>{tier.desc}</div>
+                </div>
+                <div className="preview-overlay">
+                  <div className="preview-lock">🔒</div>
+                  <div className="preview-lock-text">Enter your details to unlock</div>
+                  <div className="preview-lock-sub">Free — takes 10 seconds</div>
+                </div>
+              </div>
               <EmailGate
-                title="Get your free AI Readiness Report"
-                subtitle="Enter your details to see your score, tier and personalised action plan. We'll also send a copy to your inbox."
+                title="Unlock your free AI Readiness Report"
+                subtitle="See your score, tier and personalised action plan. We'll also send a copy to your inbox."
                 btnText="Show My Readiness Report →"
                 next="assess-results"
                 toolUsed="AI Readiness Assessment"
@@ -773,11 +814,33 @@ export default function App() {
             if(!r) return null;
             return <>
               <div className="back" onClick={()=>{setCostStep(COST_STEPS.length-1);setScreen("cost-q");}}>← Back</div>
-              <div className="chip">AI Project Cost Calculator · Almost There</div>
+              <div className="chip">AI Project Cost Calculator · Your Estimate Is Ready</div>
               <h1 style={{fontSize:26,marginBottom:20}}>Your project estimate is <em>ready</em></h1>
+              <div className="preview-wrap">
+                <div className="blur-preview">
+                  <div style={{background:"linear-gradient(135deg,#1e3a5f,#1d4ed8)",borderRadius:12,padding:"20px 24px",color:"#fff",marginBottom:12}}>
+                    <div style={{fontSize:11,fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:"#93c5fd",marginBottom:6}}>Estimated Project Investment</div>
+                    <div style={{fontFamily:"'Plus Jakarta Sans',sans-serif",fontSize:34,fontWeight:800}}>{fmt(r.low)} – {fmt(r.high)}</div>
+                    <div style={{fontSize:13,color:"#93c5fd",marginTop:4}}>Timeline: {r.wLow}–{r.wHigh} weeks</div>
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                    {["Project Type","Timeline","Deployment","Engagement"].map((l,i)=>(
+                      <div key={i} style={{background:"#f3f4f6",borderRadius:8,padding:"10px 12px"}}>
+                        <div style={{fontSize:10,color:"#9ca3af",textTransform:"uppercase",letterSpacing:1,marginBottom:3}}>{l}</div>
+                        <div style={{fontSize:13,fontWeight:700,color:"#111"}}>████████</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="preview-overlay">
+                  <div className="preview-lock">🔒</div>
+                  <div className="preview-lock-text">Enter your details to unlock</div>
+                  <div className="preview-lock-sub">Free — takes 10 seconds</div>
+                </div>
+              </div>
               <EmailGate
-                title="Get your free project cost estimate"
-                subtitle="Enter your details to see your full cost estimate and scope breakdown. An Omdena specialist can turn this into a formal proposal within 48 hours."
+                title="Unlock your free project estimate"
+                subtitle="See your full cost breakdown and scope. An Omdena specialist can turn this into a formal proposal within 48 hours."
                 btnText="Show My Cost Estimate →"
                 next="cost-results"
                 toolUsed="Project Cost Calculator"
