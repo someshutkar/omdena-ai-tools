@@ -370,9 +370,11 @@ function calcCost(cs) {
 }
 
 const GA_ID = "G-TEV21NE260";
+const OMDENA_GA_ID = "G-JTHDH3SLKN";
 
 function trackEvent(eventName, params = {}) {
   try {
+    // Track on tool's own GA4
     if(typeof window !== "undefined") {
       window.dataLayer = window.dataLayer || [];
       if(typeof window.gtag === "function") {
@@ -380,6 +382,14 @@ function trackEvent(eventName, params = {}) {
       } else {
         window.dataLayer.push({ event: eventName, ...params });
       }
+    }
+    // Send to parent page (omdena.com) via postMessage
+    if(typeof window !== "undefined" && window.parent !== window) {
+      window.parent.postMessage({
+        type: "omdena_tool_event",
+        eventName,
+        params
+      }, "*");
     }
   } catch(e) {
     console.log("GA4 event error:", e);
@@ -440,7 +450,7 @@ export default function App() {
   const calcROI = () => {
     trackEvent("roi_calculated", { vertical });
     setRoiResults(ROI_CONFIG[vertical].calculate(roiInputs));
-    setScreen("roi-preview");
+    setScreen("roi-gate");
   };
   const answerQ = (qId, s) => {
     const na = {...answers,[qId]:s};
@@ -450,7 +460,7 @@ export default function App() {
       const total = Object.values(na).reduce((a,b)=>a+b,0);
       trackEvent("assessment_completed", { vertical, score: total });
       setScore(total);
-      setScreen("assess-preview");
+      setScreen("assess-gate");
     }
   };
 
@@ -520,7 +530,7 @@ export default function App() {
     if(costStep < COST_STEPS.length-1) setCostStep(costStep+1);
     else {
       trackEvent("cost_calculator_completed", { vertical });
-      setScreen("cost-preview");
+      setScreen("cost-gate");
     }
   };
 
@@ -585,23 +595,17 @@ export default function App() {
             <button className="btn" onClick={calcROI}>Calculate My ROI →</button>
           </>}
 
-          {/* ── ROI PREVIEW — show number, gate breakdown ── */}
-          {screen==="roi-preview"&&roiResults&&(()=>{
+          {/* ── ROI GATE ── */}
+          {screen==="roi-gate"&&roiResults&&(()=>{
             const total=roiResults.reduce((a,r)=>a+r.monthly,0);
             return <>
               <div className="back" onClick={()=>setScreen("roi-inputs")}>← Back</div>
-              <div className="chip">{vConfig?.icon} {vConfig?.label} · Your Result</div>
-              <h1 style={{fontSize:26,marginBottom:20}}>Your estimated <em>AI savings</em></h1>
-              <div className="roi-preview">
-                <div className="rp-label">Estimated Monthly Savings</div>
-                <div className="rp-value">{fmt(total)}</div>
-                <div className="rp-sub">≈ {fmt(total*12)} per year</div>
-                <div className="rp-hint">🔓 Enter your details below to unlock the full breakdown showing exactly where these savings come from</div>
-              </div>
+              <div className="chip">{vConfig?.icon} {vConfig?.label} · Almost There</div>
+              <h1 style={{fontSize:26,marginBottom:20}}>Your savings report is <em>ready</em></h1>
               <EmailGate
-                title="Unlock your full ROI breakdown"
-                subtitle="See exactly where your savings come from, category by category. We'll also send a copy to your inbox."
-                btnText="Unlock My Full Breakdown →"
+                title="Get your free AI savings report"
+                subtitle="Enter your details to see exactly how much AI could save your business, broken down by category."
+                btnText="Show My Savings Report →"
                 next="roi-results"
                 toolUsed="ROI Calculator"
                 result={`Monthly savings: ${fmt(total)} | Annual: ${fmt(total*12)}`}
@@ -673,26 +677,17 @@ export default function App() {
             </div>
           </>}
 
-          {/* ── ASSESS PREVIEW — show score + tier, gate action plan ── */}
-          {screen==="assess-preview"&&(()=>{
+          {/* ── ASSESS GATE ── */}
+          {screen==="assess-gate"&&(()=>{
             const tier=getTier(score);
             return <>
               <div className="back" onClick={()=>{setCurrentQ(ASSESSMENT_QUESTIONS.length-1);setScreen("assess-questions");}}>← Back</div>
-              <div className="chip">{vConfig?.icon} {vConfig?.label} · Your Score</div>
-              <h1 style={{fontSize:26,marginBottom:20}}>Your <em>AI Readiness</em> score</h1>
-              <div className="score-preview">
-                <div className="scircle" style={{borderColor:tier.color}}>
-                  <span className="snum" style={{color:tier.color}}>{score}</span>
-                  <span className="sdenom">out of 80</span>
-                </div>
-                <div className="sbadge" style={{borderColor:tier.color+"55",color:tier.color,background:tier.color+"11"}}>{tier.emoji} {tier.label}</div>
-                <div className="sp-headline">{tier.headline}</div>
-                <div className="sp-hint">🔓 Enter your details below to unlock your full action plan and personalised next steps</div>
-              </div>
+              <div className="chip">{vConfig?.icon} {vConfig?.label} · Almost There</div>
+              <h1 style={{fontSize:26,marginBottom:20}}>Your readiness report is <em>ready</em></h1>
               <EmailGate
-                title="Unlock your full action plan"
-                subtitle="Get your personalised next steps based on your score. We'll also send a copy to your inbox."
-                btnText="Unlock My Action Plan →"
+                title="Get your free AI Readiness Report"
+                subtitle="Enter your details to see your score, tier and personalised action plan. We'll also send a copy to your inbox."
+                btnText="Show My Readiness Report →"
                 next="assess-results"
                 toolUsed="AI Readiness Assessment"
                 result={`Score: ${score}/80 | Tier: ${tier.label}`}
@@ -772,24 +767,18 @@ export default function App() {
             </>;
           })()}
 
-          {/* ── COST PREVIEW — show range, gate full breakdown ── */}
-          {screen==="cost-preview"&&(()=>{
+          {/* ── COST GATE ── */}
+          {screen==="cost-gate"&&(()=>{
             const r=calcCost(costState);
             if(!r) return null;
             return <>
               <div className="back" onClick={()=>{setCostStep(COST_STEPS.length-1);setScreen("cost-q");}}>← Back</div>
-              <div className="chip">AI Project Cost Calculator · Your Estimate</div>
-              <h1 style={{fontSize:26,marginBottom:20}}>Your project <em>cost estimate</em></h1>
-              <div className="cost-preview">
-                <div className="cp-label">Estimated Project Investment</div>
-                <div className="cp-range">{fmt(r.low)} – {fmt(r.high)}</div>
-                <div className="cp-sub">Timeline: {r.wLow}–{r.wHigh} weeks</div>
-                <div className="cp-hint">🔓 Enter your details below to unlock the full scope breakdown and what's included</div>
-              </div>
+              <div className="chip">AI Project Cost Calculator · Almost There</div>
+              <h1 style={{fontSize:26,marginBottom:20}}>Your project estimate is <em>ready</em></h1>
               <EmailGate
-                title="Unlock your full project breakdown"
-                subtitle="See exactly what's included in your estimate. An Omdena specialist can turn this into a formal proposal within 48 hours."
-                btnText="Unlock My Full Breakdown →"
+                title="Get your free project cost estimate"
+                subtitle="Enter your details to see your full cost estimate and scope breakdown. An Omdena specialist can turn this into a formal proposal within 48 hours."
+                btnText="Show My Cost Estimate →"
                 next="cost-results"
                 toolUsed="Project Cost Calculator"
                 result={`Estimate: ${fmt(r.low)} – ${fmt(r.high)} | Timeline: ${r.wLow}–${r.wHigh} weeks`}
